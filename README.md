@@ -24,7 +24,7 @@ export default async function createPlugin(env: PluginEnvironment) {
   return await createRouter({
     discoveryApi: env.discovery,
     logger: env.logger,
-    cronSchedule: env.config.getOptionalString('backend.cron') ?? '0 3,7,11,15,19,23 * * *'
+    cronSchedule: env.config.getOptionalString('cortex.backend.cron') ?? '0 3,7,11,15,19,23 * * *'
   });
 }
 ```
@@ -35,10 +35,10 @@ import cortex from './plugins/cortex';
 ...
 const cortexEnv = useHotMemoize(module, () => createEnv('cortex'));
 ...
-apiRouter.use('/cortex', await aws(cortexEnv));
+apiRouter.use('/cortex', await cortex(cortexEnv));
 ```
 
-3. Update [app-config.yaml](https://github.com/backstage/backstage/blob/master/app-config.yaml) to add a new proxy
+4. Update [app-config.yaml](https://github.com/backstage/backstage/blob/master/app-config.yaml) to add a new proxy
    config:
 ```yaml
 '/cortex':
