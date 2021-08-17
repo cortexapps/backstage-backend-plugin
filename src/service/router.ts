@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { errorHandler, PluginEndpointDiscovery } from '@backstage/backend-common';
+import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
@@ -39,7 +39,6 @@ export async function createRouter(
   router.get('/health', (_, response) => {
     response.send({ status: 'ok' });
   });
-  router.use(errorHandler());
 
   await initCron(options)
 
