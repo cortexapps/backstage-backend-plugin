@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Backstage Authors
+ * Copyright 2021 Cortex Applications Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { CortexApi } from "../api/CortexApi";
-import { CatalogApi } from "../../../../packages/catalog-client";
 import { Logger } from 'winston';
+import { CatalogApi } from "@backstage/catalog-client";
 
 interface SyncEntitiesOptions {
   logger: Logger;
