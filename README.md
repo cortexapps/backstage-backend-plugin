@@ -1,14 +1,48 @@
-# cortex-backend
+# Cortex Backend Plugin for Backstage
 
-Welcome to the cortex-backend backend plugin!
+See the [frontend plugin](https://github.com/cortexapps/backstage-plugin) for details on the plugin.
+The backend plugin will allow you to sync your Backstage services with Cortex asynchronously, set
+to any Cron schedule of your choosing.
 
-_This plugin was created through the Backstage CLI_
+To start using the Backstage plugin and see a demo, please [sign up here](https://www.getcortexapp.com/demo) and we will
+reach out with more info!
 
-## Getting started
+## Setup and Integration
 
-Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn
-start` in the root directory, and then navigating to [/cortex-backend](http://localhost:3000/cortex-backend).
+1. In the [packages/backend](https://github.com/backstage/backstage/blob/master/packages/backend/) directory of your backstage
+   instance, add the plugin as a package.json dependency:
 
-You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
-This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.
-It is only meant for local development, and the setup for it can be found inside the [/dev](/dev) directory.
+```shell
+$ yarn add @cortexapps/backstage-backend-plugin
+```
+2. Create a new file: `packages/backend/src/plugins/cortex.ts`:
+```ts
+import { PluginEnvironment } from '../types';
+import { createRouter } from '@cortexapps/backstage-backend-plugin';
+
+export default async function createPlugin(env: PluginEnvironment) {
+  return await createRouter({
+    discoveryApi: env.discovery,
+    logger: env.logger,
+    cronSchedule: env.config.getOptionalString('backend.cron') ?? '0 3,7,11,15,19,23 * * *'
+  });
+}
+```
+
+3. Update `packages/backend/src/index.ts`:
+```tsx
+import cortex from './plugins/cortex';
+...
+const cortexEnv = useHotMemoize(module, () => createEnv('cortex'));
+...
+apiRouter.use('/cortex', await aws(cortexEnv));
+```
+
+3. Update [app-config.yaml](https://github.com/backstage/backstage/blob/master/app-config.yaml) to add a new proxy
+   config:
+```yaml
+'/cortex':
+    target: ${CORTEX_BACKEND_HOST_URL}
+    headers:
+      Authorization: ${CORTEX_TOKEN}
+```
