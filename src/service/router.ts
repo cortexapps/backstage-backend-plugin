@@ -19,9 +19,9 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import * as cron from "node-cron";
-import { CatalogClient } from "@backstage/catalog-client";
 import { CortexClient } from "../api/CortexClient";
 import { syncEntities } from "./task";
+import { CatalogClient } from "../api/CatalogClient";
 
 export interface RouterOptions {
   logger: Logger;
