@@ -33,7 +33,7 @@ export class CortexClient implements CortexApi {
   }
 
   async syncEntities(entities: Entity[]): Promise<void> {
-    return await this.post(`/api/internal/v1/backstage`, { entities: entities })
+    return await this.post(`/api/backstage/v1/entities`, { entities: entities })
   }
 
   private async getBasePath(): Promise<string> {
