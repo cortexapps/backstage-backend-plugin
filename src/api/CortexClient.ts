@@ -18,6 +18,8 @@
 import { CortexApi } from "./CortexApi";
 import { Entity } from '@backstage/catalog-model';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { CustomMapping } from "@cortexapps/backstage-plugin-extensions";
+import { applyCustomMappings } from "../utils/componentUtils";
 
 const fetch = require("node-fetch");
 
@@ -32,8 +34,17 @@ export class CortexClient implements CortexApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-  async syncEntities(entities: Entity[]): Promise<void> {
-    return await this.post(`/api/backstage/v1/entities`, { entities: entities })
+  async syncEntities(
+    entities: Entity[],
+    customMappings?: CustomMapping[],
+  ): Promise<void> {
+    const withCustomMappings: Entity[] = customMappings
+      ? entities.map(entity => applyCustomMappings(entity, customMappings))
+      : entities;
+
+    return await this.post(`/api/backstage/v1/entities`, {
+      entities: withCustomMappings,
+    });
   }
 
   private async getBasePath(): Promise<string> {

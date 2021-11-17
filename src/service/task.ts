@@ -16,17 +16,20 @@
 import { CortexApi } from "../api/CortexApi";
 import { Logger } from 'winston';
 import { CatalogApi } from "@backstage/catalog-client";
+import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 
 interface SyncEntitiesOptions {
   logger: Logger;
   cortexApi: CortexApi;
   catalogApi: CatalogApi
+  extensionApi?: ExtensionApi;
 }
 
-export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi }) => {
+export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi, extensionApi }) => {
+  const customMappings = await extensionApi?.getCustomMappings() ?? []
   const { items: entities } = await catalogApi.getEntities()
 
   logger.info("Syncing entities with Cortex...")
-  await cortexApi.syncEntities(entities)
+  await cortexApi.syncEntities(entities, customMappings)
   logger.info("Finished syncing entities with Cortex")
 }

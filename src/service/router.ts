@@ -22,11 +22,13 @@ import * as cron from "node-cron";
 import { CortexClient } from "../api/CortexClient";
 import { syncEntities } from "./task";
 import { CatalogClient } from "../api/CatalogClient";
+import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 
 export interface RouterOptions {
   logger: Logger;
   discoveryApi: PluginEndpointDiscovery;
   cronSchedule: string;
+  extensionApi?: ExtensionApi;
 }
 
 export async function createRouter(
@@ -47,12 +49,12 @@ export async function createRouter(
 
 async function initCron(options: RouterOptions) {
 
-  const { logger, discoveryApi, cronSchedule } = options
+  const { logger, discoveryApi, cronSchedule, extensionApi } = options
 
   const catalogApi = new CatalogClient({ discoveryApi })
   const cortexApi = new CortexClient({ discoveryApi })
 
   cron.schedule(cronSchedule, () => {
-    syncEntities({ logger, catalogApi, cortexApi })
+    syncEntities({ logger, catalogApi, cortexApi, extensionApi })
   })
 }

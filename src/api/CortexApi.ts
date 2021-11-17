@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
+import { CustomMapping } from "@cortexapps/backstage-plugin-extensions";
 
 export interface CortexApi {
-  syncEntities(entities: Entity[]): Promise<void>;
+  syncEntities(
+    entities: Entity[],
+    customMappings?: CustomMapping[],
+  ): Promise<void>;
 }
