@@ -21,8 +21,8 @@ import { Logger } from 'winston';
 import * as cron from "node-cron";
 import { CortexClient } from "../api/CortexClient";
 import { syncEntities } from "./task";
-import { CatalogClient } from "../api/CatalogClient";
 import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
+import {CatalogClient} from "@backstage/catalog-client";
 
 export interface RouterOptions {
   logger: Logger;
