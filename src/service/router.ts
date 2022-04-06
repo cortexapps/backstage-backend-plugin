@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {PluginEndpointDiscovery, TokenManager} from '@backstage/backend-common';
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
@@ -29,6 +29,7 @@ export interface RouterOptions {
   discoveryApi: PluginEndpointDiscovery;
   cronSchedule: string;
   extensionApi?: ExtensionApi;
+  tokenManager?: TokenManager;
 }
 
 export async function createRouter(
@@ -49,12 +50,12 @@ export async function createRouter(
 
 async function initCron(options: RouterOptions) {
 
-  const { logger, discoveryApi, cronSchedule, extensionApi } = options
+  const { logger, discoveryApi, cronSchedule, extensionApi, tokenManager } = options
 
   const catalogApi = new CatalogClient({ discoveryApi })
   const cortexApi = new CortexClient({ discoveryApi })
 
   cron.schedule(cronSchedule, () => {
-    syncEntities({ logger, catalogApi, cortexApi, extensionApi })
+    syncEntities({ logger, catalogApi, cortexApi, extensionApi, tokenManager })
   })
 }

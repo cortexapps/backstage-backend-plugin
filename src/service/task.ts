@@ -17,17 +17,26 @@ import { CortexApi } from "../api/CortexApi";
 import { Logger } from 'winston';
 import { CatalogApi } from "@backstage/catalog-client";
 import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
+import {TokenManager} from "@backstage/backend-common";
 
 interface SyncEntitiesOptions {
   logger: Logger;
   cortexApi: CortexApi;
   catalogApi: CatalogApi
   extensionApi?: ExtensionApi;
+  tokenManager?: TokenManager;
 }
 
-export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi, extensionApi }) => {
+export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi, extensionApi, tokenManager }) => {
   const customMappings = await extensionApi?.getCustomMappings() ?? []
-  const { items: entities } = await catalogApi.getEntities()
+
+  let token: string | undefined = undefined;
+  if (tokenManager !== undefined) {
+    logger.info("Using TokenManager for catalog request");
+    ({ token } = await tokenManager.getToken());
+  }
+
+  const { items: entities } = await catalogApi.getEntities(undefined, { token })
 
   logger.info("Syncing entities with Cortex...")
   await cortexApi.syncEntities(entities, customMappings)
