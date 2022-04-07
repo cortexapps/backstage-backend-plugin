@@ -20,5 +20,10 @@ export interface CortexApi {
   syncEntities(
     entities: Entity[],
     customMappings?: CustomMapping[],
+    requestOptions?: RequestOptions,
   ): Promise<void>;
+}
+
+export interface RequestOptions {
+  token?: string;
 }
