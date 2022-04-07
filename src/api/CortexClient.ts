@@ -15,7 +15,7 @@
  */
 
 
-import { CortexApi } from "./CortexApi";
+import {CortexApi, RequestOptions} from "./CortexApi";
 import { Entity } from '@backstage/catalog-model';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { CustomMapping } from "@cortexapps/backstage-plugin-extensions";
@@ -37,6 +37,7 @@ export class CortexClient implements CortexApi {
   async syncEntities(
     entities: Entity[],
     customMappings?: CustomMapping[],
+    requestOptions?: RequestOptions,
   ): Promise<void> {
     const withCustomMappings: Entity[] = customMappings
       ? entities.map(entity => applyCustomMappings(entity, customMappings))
@@ -44,7 +45,7 @@ export class CortexClient implements CortexApi {
 
     return await this.post(`/api/backstage/v1/entities`, {
       entities: withCustomMappings,
-    });
+    }, requestOptions);
   }
 
   private async getBasePath(): Promise<string> {
@@ -52,14 +53,15 @@ export class CortexClient implements CortexApi {
     return `${proxyBasePath}/cortex`
   }
 
-  private async post(path: string, body?: any): Promise<any | undefined> {
+  private async post(path: string, body?: any, requestOptions?: RequestOptions): Promise<any | undefined> {
     const basePath = await this.getBasePath();
     const url = `${basePath}${path}`;
 
     const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
     });
 
     const responseBody = await response.json();
