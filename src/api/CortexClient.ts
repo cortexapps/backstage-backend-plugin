@@ -15,7 +15,7 @@
  */
 
 
-import {CortexApi, RequestOptions} from "./CortexApi";
+import { CortexApi, RequestOptions } from "./CortexApi";
 import { Entity } from '@backstage/catalog-model';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { CustomMapping } from "@cortexapps/backstage-plugin-extensions";
