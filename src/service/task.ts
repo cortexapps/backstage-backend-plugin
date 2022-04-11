@@ -39,6 +39,6 @@ export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ log
   const { items: entities } = await catalogApi.getEntities(undefined, { token })
 
   logger.info("Syncing entities with Cortex...")
-  await cortexApi.syncEntities(entities, customMappings)
+  await cortexApi.syncEntities(entities, customMappings, { token })
   logger.info("Finished syncing entities with Cortex")
 }
