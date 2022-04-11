@@ -60,8 +60,10 @@ export class CortexClient implements CortexApi {
     const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' },
-      ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
+      headers: {
+        'Content-Type': 'application/json' ,
+        ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
+      },
     });
 
     const responseBody = await response.json();
