@@ -53,7 +53,7 @@ export class CortexClient implements CortexApi {
     return `${proxyBasePath}/cortex`
   }
 
-  private async post(path: string, body?: any, requestOptions?: RequestOptions): Promise<any | undefined> {
+  private async post(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
     const basePath = await this.getBasePath();
     const url = `${basePath}${path}`;
 
@@ -66,13 +66,10 @@ export class CortexClient implements CortexApi {
       },
     });
 
-    const responseBody = await response.json();
     if (response.status !== 200) {
       throw new Error(
-        `Error communicating with Cortex: ${JSON.stringify(responseBody)}`,
+        `Error communicating with Cortex`,
       );
     }
-
-    return responseBody;
   }
 }
