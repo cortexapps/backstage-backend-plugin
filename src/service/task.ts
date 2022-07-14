@@ -41,7 +41,7 @@ export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ log
   logger.info("Syncing entities with Cortex...")
   try {
     await cortexApi.syncEntities(entities, customMappings, { token })
-  } catch (err) {
+  } catch (err: any) {
     logger.error(`Error while syncing entties with Cortex: ${err.message}`)
   }
   
