@@ -24,7 +24,7 @@ import { captor } from "jest-mock-extended";
 
 const winston = require('winston');
 
-describe('<SettingsPage/>', () => {
+describe('task', () => {
 
     const logger: Logger = winston.createLogger({
         transports: [
