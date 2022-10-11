@@ -19,14 +19,12 @@ import { Entity } from "@backstage/catalog-model";
 import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 import { CatalogApi } from "@backstage/catalog-client";
 import { syncEntities } from "./task";
-import { Logger } from "winston";
+import * as winston from "winston";
 import { captor } from "jest-mock-extended";
-
-const winston = require('winston');
 
 describe('task', () => {
 
-    const logger: Logger = winston.createLogger({
+    const logger = winston.createLogger({
         transports: [
             new winston.transports.Console()
         ]
