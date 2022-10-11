@@ -28,19 +28,22 @@ interface SyncEntitiesOptions {
 }
 
 export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi, extensionApi, tokenManager }) => {
-  const customMappings = await extensionApi?.getCustomMappings() ?? []
-
   let token: string | undefined = undefined;
   if (tokenManager !== undefined) {
     logger.info("Using TokenManager for catalog request");
     ({ token } = await tokenManager.getToken());
   }
 
+  logger.info("Fetching all Backstage entities...")
   const { items: entities } = await catalogApi.getEntities(undefined, { token })
+
+  logger.info("Fetching Cortex extensions...")
+  const customMappings = await extensionApi?.getCustomMappings?.()
+  const groupOverrides = await extensionApi?.getTeamOverrides?.(entities);
 
   logger.info("Syncing entities with Cortex...")
   try {
-    await cortexApi.syncEntities(entities, customMappings, { token })
+    await cortexApi.syncEntities(entities, customMappings, groupOverrides, { token })
   } catch (err: any) {
     logger.error(`Error while syncing entties with Cortex: ${err.message}`)
   }
