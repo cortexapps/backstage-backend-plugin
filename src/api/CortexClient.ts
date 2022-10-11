@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Cortex Applications Inc.
+ * Copyright 2022 Cortex Applications, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 import { CortexApi, RequestOptions } from "./CortexApi";
 import { Entity } from '@backstage/catalog-model';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
-import { CustomMapping } from "@cortexapps/backstage-plugin-extensions";
+import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 import { applyCustomMappings } from "../utils/componentUtils";
 
 const fetch = require("node-fetch");
@@ -37,6 +35,7 @@ export class CortexClient implements CortexApi {
   async syncEntities(
     entities: Entity[],
     customMappings?: CustomMapping[],
+    teamOverrides?: TeamOverrides,
     requestOptions?: RequestOptions,
   ): Promise<void> {
     const withCustomMappings: Entity[] = customMappings
@@ -45,6 +44,7 @@ export class CortexClient implements CortexApi {
 
     return await this.post(`/api/backstage/v1/entities`, {
       entities: withCustomMappings,
+      teamOverrides,
     }, requestOptions);
   }
 

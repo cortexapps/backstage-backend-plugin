@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Cortex Applications Inc.
+ * Copyright 2022 Cortex Applications, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import { CustomMapping } from "@cortexapps/backstage-plugin-extensions";
+import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 
 export interface CortexApi {
   syncEntities(
     entities: Entity[],
     customMappings?: CustomMapping[],
+    teamOverrides?: TeamOverrides,
     requestOptions?: RequestOptions,
   ): Promise<void>;
 }
