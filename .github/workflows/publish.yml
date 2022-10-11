@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 14.17.0
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn install
+      - run: yarn --frozen-lockfile
       - run: yarn tsc
       - run: yarn build
       - run: yarn publish
