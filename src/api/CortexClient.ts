@@ -18,7 +18,7 @@
 import { CortexApi, RequestOptions } from "./CortexApi";
 import { Entity } from '@backstage/catalog-model';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
-import {CustomMapping, TeamOverrides} from "@cortexapps/backstage-plugin-extensions";
+import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 import { applyCustomMappings } from "../utils/componentUtils";
 
 const fetch = require("node-fetch");

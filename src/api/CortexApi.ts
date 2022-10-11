@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import {CustomMapping, TeamOverrides} from "@cortexapps/backstage-plugin-extensions";
+import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 
 export interface CortexApi {
   syncEntities(
