@@ -44,5 +44,5 @@ apiRouter.use('/cortex', await cortex(cortexEnv));
 '/cortex':
     target: ${CORTEX_BACKEND_HOST_URL}
     headers:
-      Authorization: ${CORTEX_TOKEN}
+      Authorization: Bearer ${CORTEX_TOKEN}
 ```
