@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Cortex Applications, Inc.
+ * Copyright 2023 Cortex Applications, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Entity } from '@backstage/catalog-model';
-import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
-import { EntitySyncProgress, RequestOptions } from "./types";
 
-export interface CortexApi {
-  submitEntitySync(
-    entities: Entity[],
-    customMappings?: CustomMapping[],
-    teamOverrides?: TeamOverrides,
-    requestOptions?: RequestOptions,
-  ): Promise<EntitySyncProgress>;
+export interface RequestOptions {
+  token?: string;
+}
+
+export interface EntitySyncProgress {
+  percentage: number | null;
 }

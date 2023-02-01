@@ -18,7 +18,7 @@ import mock from 'jest-mock-extended/lib/Mock';
 import { Entity } from "@backstage/catalog-model";
 import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 import { CatalogApi } from "@backstage/catalog-client";
-import { syncEntities } from "./task";
+import { submitEntitySync } from "./task";
 import * as winston from "winston";
 import { captor } from "jest-mock-extended";
 
@@ -96,7 +96,7 @@ describe('task', () => {
     }
 
     it('should sync entities with overrides', async () => {
-        await syncEntities({
+        await submitEntitySync({
             logger,
             cortexApi,
             catalogApi: catalogApi as CatalogApi,
@@ -104,7 +104,7 @@ describe('task', () => {
         });
 
         const customMappingsCaptor = captor();
-        expect(cortexApi.syncEntities).toHaveBeenLastCalledWith(
+        expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
             [component1],
             customMappingsCaptor,
             { teams, relationships },
