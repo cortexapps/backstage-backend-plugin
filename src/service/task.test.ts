@@ -104,7 +104,7 @@ describe('task', () => {
         });
 
         const customMappingsCaptor = captor();
-        expect(cortexApi.syncEntities).toHaveBeenLastCalledWith(
+        expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
             [component1],
             customMappingsCaptor,
             { teams, relationships },
