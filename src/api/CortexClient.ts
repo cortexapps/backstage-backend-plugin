@@ -38,7 +38,7 @@ export class CortexClient implements CortexApi {
       ? entities.map(entity => applyCustomMappings(entity, customMappings))
       : entities;
 
-    return await this.post(`/api/backstage/v1/entities/sync`, {
+    return await this.post(`/api/backstage/v1/entities/sync?allowDuplicateSyncs=true`, {
       entities: withCustomMappings,
       teamOverrides,
     }, requestOptions);
