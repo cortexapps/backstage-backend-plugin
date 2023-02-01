@@ -19,7 +19,7 @@ import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import * as cron from "node-cron";
 import { CortexClient } from "../api/CortexClient";
-import { syncEntities } from "./task";
+import { submitEntitySync } from "./task";
 import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 import { CatalogClient } from "@backstage/catalog-client";
 
@@ -55,6 +55,6 @@ async function initCron(options: RouterOptions) {
   const cortexApi = new CortexClient({ discoveryApi })
 
   cron.schedule(cronSchedule, () => {
-    syncEntities({ logger, catalogApi, cortexApi, extensionApi, tokenManager })
+    submitEntitySync({ logger, catalogApi, cortexApi, extensionApi, tokenManager })
   })
 }

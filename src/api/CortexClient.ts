@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CortexApi, RequestOptions } from "./CortexApi";
+import { CortexApi } from "./CortexApi";
 import { Entity } from '@backstage/catalog-model';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 import { applyCustomMappings } from "../utils/componentUtils";
+import { EntitySyncProgress, RequestOptions } from "./types";
 
 const fetch = require("node-fetch");
 
@@ -32,17 +33,12 @@ export class CortexClient implements CortexApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-  async syncEntities(
-    entities: Entity[],
-    customMappings?: CustomMapping[],
-    teamOverrides?: TeamOverrides,
-    requestOptions?: RequestOptions,
-  ): Promise<void> {
+  async submitEntitySync(entities: Entity[], customMappings?: CustomMapping[], teamOverrides?: TeamOverrides, requestOptions?: RequestOptions): Promise<EntitySyncProgress> {
     const withCustomMappings: Entity[] = customMappings
       ? entities.map(entity => applyCustomMappings(entity, customMappings))
       : entities;
 
-    return await this.post(`/api/backstage/v1/entities`, {
+    return await this.post(`/api/backstage/v1/entities/sync`, {
       entities: withCustomMappings,
       teamOverrides,
     }, requestOptions);
@@ -53,7 +49,7 @@ export class CortexClient implements CortexApi {
     return `${proxyBasePath}/cortex`
   }
 
-  private async post(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
+  private async post(path: string, body?: any, requestOptions?: RequestOptions): Promise<any> {
     const basePath = await this.getBasePath();
     const url = `${basePath}${path}`;
 
@@ -71,5 +67,7 @@ export class CortexClient implements CortexApi {
         `Error communicating with Cortex`,
       );
     }
+
+    return response.json();
   }
 }

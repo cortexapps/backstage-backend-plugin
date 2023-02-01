@@ -27,7 +27,7 @@ interface SyncEntitiesOptions {
   tokenManager?: TokenManager;
 }
 
-export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi, extensionApi, tokenManager }) => {
+export const submitEntitySync: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi, extensionApi, tokenManager }) => {
   let token: string | undefined = undefined;
   if (tokenManager !== undefined) {
     logger.info("Using TokenManager for catalog request");
@@ -41,12 +41,12 @@ export const syncEntities: (options: SyncEntitiesOptions) => void = async ({ log
   const customMappings = await extensionApi?.getCustomMappings?.()
   const groupOverrides = await extensionApi?.getTeamOverrides?.(entities);
 
-  logger.info("Syncing entities with Cortex...")
+  logger.info("Submitting entity sync task to Cortex...")
   try {
-    await cortexApi.syncEntities(entities, customMappings, groupOverrides, { token })
+    await cortexApi.submitEntitySync(entities, customMappings, groupOverrides, { token })
   } catch (err: any) {
-    logger.error(`Error while syncing entties with Cortex: ${err.message}`)
+    logger.error(`Error while submitting entity sync task to Cortex: ${err.message}`)
   }
   
-  logger.info("Finished syncing entities with Cortex")
+  logger.info("Submitted entity sync task to Cortex")
 }

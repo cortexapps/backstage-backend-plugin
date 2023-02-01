@@ -15,16 +15,13 @@
  */
 import { Entity } from '@backstage/catalog-model';
 import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
+import { EntitySyncProgress, RequestOptions } from "./types";
 
 export interface CortexApi {
-  syncEntities(
+  submitEntitySync(
     entities: Entity[],
     customMappings?: CustomMapping[],
     teamOverrides?: TeamOverrides,
     requestOptions?: RequestOptions,
-  ): Promise<void>;
-}
-
-export interface RequestOptions {
-  token?: string;
+  ): Promise<EntitySyncProgress>;
 }
