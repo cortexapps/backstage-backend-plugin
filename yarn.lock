@@ -1145,6 +1145,11 @@
     lodash "^4.17.21"
     uuid "^8.0.0"
 
+"@backstage/cli-common@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@backstage/cli-common/-/cli-common-0.1.11.tgz#9d8fd8cbe83e21ad3d207edecb3c3df3024a35a8"
+  integrity sha512-6gjYi2ndXUBVV6YNbiPJMHoPLROlikZ2nnKJrblnYhWZaKhKncXVxtjfCGPItTFPnIbW0oZu2Ue0Z/1VCyfOaQ==
+
 "@backstage/cli-common@^0.1.9":
   version "0.1.9"
   resolved "https://registry.npmjs.org/@backstage/cli-common/-/cli-common-0.1.9.tgz#945c07a188f5d38282714e4aa750d3bf744c85bf"
@@ -1249,7 +1254,7 @@
     yn "^4.0.0"
     zod "^3.11.6"
 
-"@backstage/config-loader@^1.0.0", "@backstage/config-loader@^1.1.3":
+"@backstage/config-loader@^1.1.3":
   version "1.1.3"
   resolved "https://registry.npmjs.org/@backstage/config-loader/-/config-loader-1.1.3.tgz#8ca8d2c68b46c3a9306721a3eb7217a90fd09505"
   integrity sha512-f+fBSU89woVq88R164Ohs0/Yea0kRT7wq9ZLLjLF10tRHpfUQH8g1vftTpqitMXthm4yefT9PgDiYZ603BBD6g==
@@ -1270,6 +1275,27 @@
     yaml "^2.0.0"
     yup "^0.32.9"
 
+"@backstage/config-loader@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-1.1.8.tgz#3c169ce41549f1788a8a340279a4cf77367d1cac"
+  integrity sha512-S6B6OWaojJf9vWi/wVV5Pr8zXc1meSWTgjaXX64pDzdDGDlzL+wARloObJvDvqCJyLolkQuW2TNZYZKLRc6Iqg==
+  dependencies:
+    "@backstage/cli-common" "^0.1.11"
+    "@backstage/config" "^1.0.6"
+    "@backstage/errors" "^1.1.4"
+    "@backstage/types" "^1.0.2"
+    "@types/json-schema" "^7.0.6"
+    ajv "^8.10.0"
+    chokidar "^3.5.2"
+    fs-extra "10.1.0"
+    json-schema "^0.4.0"
+    json-schema-merge-allof "^0.8.1"
+    json-schema-traverse "^1.0.0"
+    node-fetch "^2.6.7"
+    typescript-json-schema "^0.55.0"
+    yaml "^2.0.0"
+    yup "^0.32.9"
+
 "@backstage/config@^1.0.0", "@backstage/config@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@backstage/config/-/config-1.0.1.tgz#9e66e2e88d945e205e179a0b3f8f835b5ba176b2"
@@ -1278,12 +1304,29 @@
     "@backstage/types" "^1.0.0"
     lodash "^4.17.21"
 
+"@backstage/config@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@backstage/config/-/config-1.0.6.tgz#551ffe6793aec29f7d7f9e5ba1bb010ba6ed0b00"
+  integrity sha512-ZN3ABydLRZNTtL9FXPpvw678CJ/G2UtGHrX/Cq6Tfd9QJ6/wjMTagTe/KibxGh6lxIG+VGU+BOAqt6mHgMDopA==
+  dependencies:
+    "@backstage/types" "^1.0.2"
+    lodash "^4.17.21"
+
 "@backstage/errors@^1.0.0", "@backstage/errors@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@backstage/errors/-/errors-1.1.0.tgz#7e2376f8d0e5d58422b43a1551e5d980173acb7b"
   integrity sha512-cWy7TpjrUvsMJ74et1PFvh0YYzzLDtK4qGJTwmF5AQBTZbNsi1UlNYET0sPVdlWbr6FRqa1QQNZwUkvpllB6YQ==
   dependencies:
     "@backstage/types" "^1.0.0"
+    cross-fetch "^3.1.5"
+    serialize-error "^8.0.1"
+
+"@backstage/errors@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@backstage/errors/-/errors-1.1.4.tgz#42bfc620f435a848abc4abccfd38b79e950642c7"
+  integrity sha512-u0q0/UlG+WM4h67Owfpvc/yN8T1ivFOLDzzmogaFSwC5+R6sZRqYasmjeURtkJvw7aG9RpXYWY7CofCSg1E20Q==
+  dependencies:
+    "@backstage/types" "^1.0.2"
     cross-fetch "^3.1.5"
     serialize-error "^8.0.1"
 
@@ -1312,6 +1355,11 @@
   version "1.0.0"
   resolved "https://registry.npmjs.org/@backstage/types/-/types-1.0.0.tgz#3c4cc1487d30d113250fc530238aae0a2ba0e58c"
   integrity sha512-x5650F/lXUO1Bo++Eg1T9vreuIzlOeljxTUCP6mxqOGgOWr8yBku42HiHX6KE80OpckFDTUyKtEWqboclfKUkg==
+
+"@backstage/types@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@backstage/types/-/types-1.0.2.tgz#a12cdc7c1ec7e0d99cb2e30903b9dfd97c1050c9"
+  integrity sha512-wE4AAP3je00UlVNV5faIto414aOUNv30CmvNmxgImNKelPRYJsMEicM9slwkrNMyFLqTMITeXJvQvMofUk3Wxg==
 
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
@@ -1356,6 +1404,13 @@
   integrity sha512-X4xqRHqN8ACt2aHVe51OxeA2HjbcL4MqFqXkrmQszJ1NOUuUu5u6Vqx/0lZSVNku7velL5FC/s5uEAj1lsBMhA==
   dependencies:
     "@cspotcode/source-map-consumer" "0.8.0"
+
+"@cspotcode/source-map-support@^0.8.0":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
+  integrity sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==
+  dependencies:
+    "@jridgewell/trace-mapping" "0.3.9"
 
 "@dabh/diagnostics@^2.0.2":
   version "2.0.2"
@@ -1863,7 +1918,7 @@
     "@jridgewell/sourcemap-codec" "^1.4.10"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@jridgewell/resolve-uri@3.1.0":
+"@jridgewell/resolve-uri@3.1.0", "@jridgewell/resolve-uri@^3.0.3":
   version "3.1.0"
   resolved "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.0.tgz#2203b118c157721addfe69d47b70465463066d78"
   integrity sha512-F2msla3tad+Mfht5cJq7LSXcdudKTWCVYUgw6pLFOOHSTtZlj6SWNYAp+AhuqLmWdBO2X5hPrLcu8cVP8fy28w==
@@ -1885,6 +1940,14 @@
   version "1.4.14"
   resolved "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.14.tgz#add4c98d341472a289190b424efbdb096991bb24"
   integrity sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==
+
+"@jridgewell/trace-mapping@0.3.9":
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.9.tgz#6534fd5933a53ba7cbf3a17615e273a0d1273ff9"
+  integrity sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==
+  dependencies:
+    "@jridgewell/resolve-uri" "^3.0.3"
+    "@jridgewell/sourcemap-codec" "^1.4.10"
 
 "@jridgewell/trace-mapping@^0.3.12", "@jridgewell/trace-mapping@^0.3.14", "@jridgewell/trace-mapping@^0.3.15", "@jridgewell/trace-mapping@^0.3.9":
   version "0.3.16"
@@ -11227,6 +11290,25 @@ ts-node@^10.2.1:
     make-error "^1.1.1"
     yn "3.1.1"
 
+ts-node@^10.9.1:
+  version "10.9.1"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
+  integrity sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==
+  dependencies:
+    "@cspotcode/source-map-support" "^0.8.0"
+    "@tsconfig/node10" "^1.0.7"
+    "@tsconfig/node12" "^1.0.7"
+    "@tsconfig/node14" "^1.0.0"
+    "@tsconfig/node16" "^1.0.2"
+    acorn "^8.4.1"
+    acorn-walk "^8.1.1"
+    arg "^4.1.0"
+    create-require "^1.1.0"
+    diff "^4.0.1"
+    make-error "^1.1.1"
+    v8-compile-cache-lib "^3.0.1"
+    yn "3.1.1"
+
 tsconfig-paths@^3.14.1:
   version "3.14.1"
   resolved "https://registry.npmjs.org/tsconfig-paths/-/tsconfig-paths-3.14.1.tgz#ba0734599e8ea36c862798e920bcf163277b137a"
@@ -11337,7 +11419,21 @@ typescript-json-schema@^0.54.0:
     typescript "~4.6.0"
     yargs "^17.1.1"
 
-typescript@^4.5.5:
+typescript-json-schema@^0.55.0:
+  version "0.55.0"
+  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.55.0.tgz#f268d27ac0b76284a929c6f72714c6ca4e1b5e20"
+  integrity sha512-BXaivYecUdiXWWNiUqXgY6A9cMWerwmhtO+lQE7tDZGs7Mf38sORDeQZugfYOZOHPZ9ulsD+w0LWjFDOQoXcwg==
+  dependencies:
+    "@types/json-schema" "^7.0.9"
+    "@types/node" "^16.9.2"
+    glob "^7.1.7"
+    path-equal "^1.1.2"
+    safe-stable-stringify "^2.2.0"
+    ts-node "^10.9.1"
+    typescript "~4.8.2"
+    yargs "^17.1.1"
+
+typescript@^4.5.5, typescript@~4.8.2:
   version "4.8.4"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
   integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
@@ -11494,6 +11590,11 @@ uuid@^8.0.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+v8-compile-cache-lib@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
+  integrity sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
