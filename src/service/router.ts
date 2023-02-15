@@ -27,6 +27,7 @@ export interface RouterOptions {
   logger: Logger;
   discoveryApi: PluginEndpointDiscovery;
   cronSchedule: string;
+  syncWithGzip?: boolean;
   extensionApi?: ExtensionApi;
   tokenManager?: TokenManager;
 }
@@ -49,12 +50,12 @@ export async function createRouter(
 
 async function initCron(options: RouterOptions) {
 
-  const { logger, discoveryApi, cronSchedule, extensionApi, tokenManager } = options
+  const { logger, discoveryApi, syncWithGzip, cronSchedule, extensionApi, tokenManager } = options
 
   const catalogApi = new CatalogClient({ discoveryApi })
   const cortexApi = new CortexClient({ discoveryApi })
 
   cron.schedule(cronSchedule, () => {
-    submitEntitySync({ logger, catalogApi, cortexApi, extensionApi, tokenManager })
+    submitEntitySync({ logger, catalogApi, cortexApi, syncWithGzip: syncWithGzip ?? false, extensionApi, tokenManager })
   })
 }

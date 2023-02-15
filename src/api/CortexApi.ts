@@ -20,6 +20,7 @@ import { EntitySyncProgress, RequestOptions } from "./types";
 export interface CortexApi {
   submitEntitySync(
     entities: Entity[],
+    shouldGzipBody: boolean,
     customMappings?: CustomMapping[],
     teamOverrides?: TeamOverrides,
     requestOptions?: RequestOptions,

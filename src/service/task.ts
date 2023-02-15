@@ -22,12 +22,13 @@ import { TokenManager } from "@backstage/backend-common";
 interface SyncEntitiesOptions {
   logger: Logger;
   cortexApi: CortexApi;
-  catalogApi: CatalogApi
+  syncWithGzip: boolean;
+  catalogApi: CatalogApi;
   extensionApi?: ExtensionApi;
   tokenManager?: TokenManager;
 }
 
-export const submitEntitySync: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, catalogApi, extensionApi, tokenManager }) => {
+export const submitEntitySync: (options: SyncEntitiesOptions) => void = async ({ logger, cortexApi, syncWithGzip, catalogApi, extensionApi, tokenManager }) => {
   let token: string | undefined = undefined;
   if (tokenManager !== undefined) {
     logger.info("Using TokenManager for catalog request");
@@ -43,7 +44,7 @@ export const submitEntitySync: (options: SyncEntitiesOptions) => void = async ({
 
   logger.info("Submitting entity sync task to Cortex...")
   try {
-    await cortexApi.submitEntitySync(entities, customMappings, groupOverrides, { token })
+    await cortexApi.submitEntitySync(entities, syncWithGzip, customMappings, groupOverrides, { token })
   } catch (err: any) {
     logger.error(`Error while submitting entity sync task to Cortex: ${err.message}`)
   }

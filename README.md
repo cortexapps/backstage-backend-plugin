@@ -46,3 +46,29 @@ apiRouter.use('/cortex', await cortex(cortexEnv));
     headers:
       Authorization: Bearer ${CORTEX_TOKEN}
 ```
+
+5. (Optional) You can choose to have the entity sync cron job use gzip to compress the entities by updating `cortex.ts` from step 2. You must also update the Backstage HTTP proxy to allow the `Content-Encoding` header.
+
+```ts
+import { PluginEnvironment } from '../types';
+import { createRouter } from '@cortexapps/backstage-backend-plugin';
+
+export default async function createPlugin(env: PluginEnvironment) {
+  return await createRouter({
+    discoveryApi: env.discovery,
+    logger: env.logger,
+    syncWithGzip: true,
+    cronSchedule: env.config.getOptionalString('cortex.backend.cron') ?? '0 3,7,11,15,19,23 * * *'
+  });
+}
+```
+
+```yaml
+proxy:
+  '/cortex':
+    target: ${CORTEX_BACKEND_HOST_URL}
+    headers:
+      Authorization: ${CORTEX_TOKEN}
+    allowedHeaders:
+      - Content-Encoding
+```
