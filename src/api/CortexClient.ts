@@ -19,6 +19,8 @@ import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 import { applyCustomMappings } from "../utils/componentUtils";
 import { EntitySyncProgress, RequestOptions } from "./types";
+import { Buffer } from "buffer";
+import { gzipSync } from "zlib";
 
 const fetch = require("node-fetch");
 
@@ -33,15 +35,22 @@ export class CortexClient implements CortexApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-  async submitEntitySync(entities: Entity[], customMappings?: CustomMapping[], teamOverrides?: TeamOverrides, requestOptions?: RequestOptions): Promise<EntitySyncProgress> {
+  async submitEntitySync(entities: Entity[], shouldGzipBody: boolean, customMappings?: CustomMapping[], teamOverrides?: TeamOverrides, requestOptions?: RequestOptions): Promise<EntitySyncProgress> {
     const withCustomMappings: Entity[] = customMappings
       ? entities.map(entity => applyCustomMappings(entity, customMappings))
       : entities;
 
-    return await this.post(`/api/backstage/v1/entities/sync?allowDuplicateSyncs=true`, {
-      entities: withCustomMappings,
-      teamOverrides,
-    }, requestOptions);
+    if (shouldGzipBody) {
+      return await this.postWithGzipBody(`/api/backstage/v1/entities/sync?allowDuplicateSyncs=true`, {
+        entities: withCustomMappings,
+        teamOverrides,
+      }, requestOptions);
+    } else {
+      return await this.post(`/api/backstage/v1/entities/sync?allowDuplicateSyncs=true`, {
+        entities: withCustomMappings,
+        teamOverrides,
+      }, requestOptions);
+    }
   }
 
   private async getBasePath(): Promise<string> {
@@ -58,6 +67,32 @@ export class CortexClient implements CortexApi {
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json' ,
+        ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Error communicating with Cortex`,
+      );
+    }
+
+    return response.json();
+  }
+
+  private async postWithGzipBody(path: string, body?: any, requestOptions?: RequestOptions): Promise<any> {
+    const basePath = await this.getBasePath();
+    const url = `${basePath}${path}`;
+
+    const input = Buffer.from(JSON.stringify(body), 'utf-8');
+    const compressed = gzipSync(input);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: compressed,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Encoding': 'gzip',
         ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
       },
     });

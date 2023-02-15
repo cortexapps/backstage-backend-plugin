@@ -32,12 +32,14 @@ export async function startStandaloneServer(
   const config = await loadBackendConfig({ logger, argv: process.argv });
   const discoveryApi = SingleHostDiscovery.fromConfig(config)
   const cronSchedule = config.getOptionalString('cortex.backend.cron') ?? '0 3,7,11,15,19,23 * * *'
+  const syncWithGzip = config.getOptionalBoolean('cortex.syncWithGzip') ?? false
 
   logger.debug('Starting application server...');
   const router = await createRouter({
     logger,
     discoveryApi,
-    cronSchedule
+    cronSchedule,
+    syncWithGzip
   });
 
   let service = createServiceBuilder(module)

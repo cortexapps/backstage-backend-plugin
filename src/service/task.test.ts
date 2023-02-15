@@ -99,6 +99,7 @@ describe('task', () => {
         await submitEntitySync({
             logger,
             cortexApi,
+            syncWithGzip: false,
             catalogApi: catalogApi as CatalogApi,
             extensionApi
         });
@@ -106,9 +107,32 @@ describe('task', () => {
         const customMappingsCaptor = captor();
         expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
             [component1],
+            false,
             customMappingsCaptor,
             { teams, relationships },
             { token: undefined }
+        );
+
+        expect(customMappingsCaptor.value).toHaveLength(1);
+        expect(customMappingsCaptor.value[0]()).toBe(extension);
+    })
+
+    it('should sync entities with gzip override', async () => {
+        await submitEntitySync({
+            logger,
+            cortexApi,
+            syncWithGzip: true,
+            catalogApi: catalogApi as CatalogApi,
+            extensionApi
+        });
+
+        const customMappingsCaptor = captor();
+        expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
+          [component1],
+          true,
+          customMappingsCaptor,
+          { teams, relationships },
+          { token: undefined }
         );
 
         expect(customMappingsCaptor.value).toHaveLength(1);
