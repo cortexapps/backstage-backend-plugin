@@ -20,15 +20,18 @@ import { Logger } from 'winston';
 import * as cron from "node-cron";
 import { CortexClient } from "../api/CortexClient";
 import { submitEntitySync } from "./task";
+import { TaskScheduler } from '@backstage/backend-tasks';
+import { Config } from "@backstage/config";
 import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 import { CatalogClient } from "@backstage/catalog-client";
 
 export interface RouterOptions {
-  logger: Logger;
-  discoveryApi: PluginEndpointDiscovery;
+  config?: Config;
   cronSchedule: string;
-  syncWithGzip?: boolean;
+  discoveryApi: PluginEndpointDiscovery;
   extensionApi?: ExtensionApi;
+  logger: Logger;
+  syncWithGzip?: boolean;
   tokenManager?: TokenManager;
 }
 
@@ -50,12 +53,35 @@ export async function createRouter(
 
 async function initCron(options: RouterOptions) {
 
-  const { logger, discoveryApi, syncWithGzip, cronSchedule, extensionApi, tokenManager } = options
+  const { config, logger, discoveryApi, syncWithGzip, cronSchedule, extensionApi, tokenManager } = options
 
   const catalogApi = new CatalogClient({ discoveryApi })
   const cortexApi = new CortexClient({ discoveryApi })
 
-  cron.schedule(cronSchedule, () => {
-    submitEntitySync({ logger, catalogApi, cortexApi, syncWithGzip: syncWithGzip ?? false, extensionApi, tokenManager })
-  })
+  try {
+    if (config !== undefined) {
+      const scheduler = TaskScheduler.fromConfig(config).forPlugin('cortex');
+      await scheduler.scheduleTask({
+        id: 'cortexapps_backstage_backend_plugin_sync',
+        frequency: {cron: cronSchedule},
+        timeout: {hours: 2},
+        fn: () => submitEntitySync({
+          logger,
+          catalogApi,
+          cortexApi,
+          syncWithGzip: syncWithGzip ?? false,
+          extensionApi,
+          tokenManager
+        }),
+      });
+    } else {
+      cron.schedule(cronSchedule, () => {
+        submitEntitySync({ logger, catalogApi, cortexApi, syncWithGzip: syncWithGzip ?? false, extensionApi, tokenManager })
+      });
+    }
+  } catch (e) {
+    cron.schedule(cronSchedule, () => {
+      submitEntitySync({ logger, catalogApi, cortexApi, syncWithGzip: syncWithGzip ?? false, extensionApi, tokenManager })
+    });
+  }
 }

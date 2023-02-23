@@ -36,6 +36,7 @@ export async function startStandaloneServer(
 
   logger.debug('Starting application server...');
   const router = await createRouter({
+    config,
     logger,
     discoveryApi,
     cronSchedule,
