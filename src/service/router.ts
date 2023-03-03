@@ -17,11 +17,11 @@ import { PluginEndpointDiscovery, TokenManager } from '@backstage/backend-common
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
-import * as cron from "node-cron";
 import { CortexClient } from "../api/CortexClient";
 import { submitEntitySync } from "./task";
 import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 import { CatalogClient } from "@backstage/catalog-client";
+import { CronJob } from "cron";
 
 export interface RouterOptions {
   logger: Logger;
@@ -55,7 +55,9 @@ async function initCron(options: RouterOptions) {
   const catalogApi = new CatalogClient({ discoveryApi })
   const cortexApi = new CortexClient({ discoveryApi })
 
-  cron.schedule(cronSchedule, () => {
-    submitEntitySync({ logger, catalogApi, cortexApi, syncWithGzip: syncWithGzip ?? false, extensionApi, tokenManager })
-  })
+  // Most cron patterns use five fields (minute is the finest granularity) but this cron library has a sixth field for second granularity.
+  new CronJob(`0 ${cronSchedule}`,
+    () => submitEntitySync({logger, catalogApi, cortexApi, syncWithGzip: syncWithGzip ?? false, extensionApi, tokenManager}),
+    null,
+    true)
 }
