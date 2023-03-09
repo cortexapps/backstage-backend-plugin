@@ -41,12 +41,12 @@ export class CortexClient implements CortexApi {
       : entities;
 
     if (shouldGzipBody) {
-      return await this.postWithGzipBody(`/api/backstage/v1/entities/sync?allowDuplicateSyncs=true`, {
+      return await this.postWithGzipBody(`/api/backstage/v1/entities/sync`, {
         entities: withCustomMappings,
         teamOverrides,
       }, requestOptions);
     } else {
-      return await this.post(`/api/backstage/v1/entities/sync?allowDuplicateSyncs=true`, {
+      return await this.post(`/api/backstage/v1/entities/sync`, {
         entities: withCustomMappings,
         teamOverrides,
       }, requestOptions);
