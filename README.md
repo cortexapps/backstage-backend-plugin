@@ -1,15 +1,14 @@
 # Cortex Backend Plugin for Backstage
 
-See the [frontend plugin](https://github.com/cortexapps/backstage-plugin) for details on the plugin.
+See the [Cortex Scorecard Plugin](https://www.npmjs.com/package/@cortexapps/backstage-plugin) for more details.
 The backend plugin will allow you to sync your Backstage services with Cortex asynchronously, set
-to any Cron schedule of your choosing.
+to any cron schedule of your choosing.
 
-To start using the Backstage plugin and see a demo, please [sign up here](https://www.getcortexapp.com/demo) and we will
-reach out with more info!
+To start using the Backstage plugin and see a demo, please [book a demo](https://www.cortex.io/demo)!
 
 ## Setup and Integration
 
-1. In the [packages/backend](https://github.com/backstage/backstage/blob/master/packages/backend/) directory of your backstage
+1. In the [packages/backend](https://github.com/backstage/backstage/blob/master/packages/backend/) directory of your Backstage
    instance, add the plugin as a package.json dependency:
 
 ```shell
