@@ -21,6 +21,7 @@ import { applyCustomMappings } from "../utils/componentUtils";
 import { EntitySyncProgress, RequestOptions } from "./types";
 import { Buffer } from "buffer";
 import { gzipSync } from "zlib";
+import { chunk } from "lodash";
 
 const fetch = require("node-fetch");
 
@@ -35,22 +36,50 @@ export class CortexClient implements CortexApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-  async submitEntitySync(entities: Entity[], shouldGzipBody: boolean, customMappings?: CustomMapping[], teamOverrides?: TeamOverrides, requestOptions?: RequestOptions): Promise<EntitySyncProgress> {
+  async submitEntitySync(
+    entities: Entity[],
+    shouldGzipBody: boolean,
+    customMappings?: CustomMapping[],
+    teamOverrides?: TeamOverrides,
+    requestOptions?: RequestOptions
+  ): Promise<EntitySyncProgress> {
     const withCustomMappings: Entity[] = customMappings
       ? entities.map(entity => applyCustomMappings(entity, customMappings))
       : entities;
 
-    if (shouldGzipBody) {
-      return await this.postWithGzipBody(`/api/backstage/v1/entities/sync`, {
-        entities: withCustomMappings,
-        teamOverrides,
-      }, requestOptions);
-    } else {
-      return await this.post(`/api/backstage/v1/entities/sync`, {
-        entities: withCustomMappings,
-        teamOverrides,
-      }, requestOptions);
+    const post = async (path: string, body?: any) => {
+      return shouldGzipBody ? await this.postVoidWithGzipBody(path, body, requestOptions) : await this.postVoid(path, body, requestOptions)
     }
+
+    await this.postVoid('/api/backstage/v2/entities/sync-init', requestOptions)
+
+    for (let customMappingsChunk of chunk(withCustomMappings, CHUNK_SIZE)) {
+      await post(`/api/backstage/v2/entities/sync-chunked`, {
+        entities: customMappingsChunk,
+      })
+    }
+
+    for (let teamOverridesTeamChunk of chunk(teamOverrides?.teams ?? [], CHUNK_SIZE)) {
+      await post(`/api/backstage/v2/entities/sync-chunked`, {
+        entities: [],
+        teamOverrides: {
+          teams: teamOverridesTeamChunk,
+          relationships: []
+        }
+      })
+    }
+
+    for (let teamOverridesRelationshipsChunk of chunk(teamOverrides?.relationships ?? [], CHUNK_SIZE)) {
+      await post(`/api/backstage/v2/entities/sync-chunked`, {
+        entities: [],
+        teamOverrides: {
+          teams: [],
+          relationships: teamOverridesRelationshipsChunk,
+        }
+      })
+    }
+
+    return await this.post('/api/backstage/v2/entities/sync-submit', requestOptions)
   }
 
   private async getBasePath(): Promise<string> {
@@ -80,7 +109,26 @@ export class CortexClient implements CortexApi {
     return response.json();
   }
 
-  private async postWithGzipBody(path: string, body?: any, requestOptions?: RequestOptions): Promise<any> {
+  private async postVoid(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
+    const basePath = await this.getBasePath();
+    const url = `${basePath}${path}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json' ,
+        ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
+      },
+    });
+    if (response.status !== 200) {
+      throw new Error(`Error communicating with Cortex`);
+    }
+
+    return;
+  }
+
+  private async postVoidWithGzipBody(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
     const basePath = await this.getBasePath();
     const url = `${basePath}${path}`;
 
@@ -98,11 +146,11 @@ export class CortexClient implements CortexApi {
     });
 
     if (response.status !== 200) {
-      throw new Error(
-        `Error communicating with Cortex`,
-      );
+      throw new Error(`Error communicating with Cortex`);
     }
 
-    return response.json();
+    return;
   }
 }
+
+const CHUNK_SIZE = 1000;
