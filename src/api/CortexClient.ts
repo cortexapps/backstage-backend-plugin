@@ -36,51 +36,51 @@ export class CortexClient implements CortexApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-    async submitEntitySync(
-        entities: Entity[],
-        shouldGzipBody: boolean,
-        customMappings?: CustomMapping[],
-        teamOverrides?: TeamOverrides,
-        requestOptions?: RequestOptions
-    ): Promise<EntitySyncProgress> {
-        const withCustomMappings: Entity[] = customMappings
-            ? entities.map(entity => applyCustomMappings(entity, customMappings))
-            : entities;
+  async submitEntitySync(
+    entities: Entity[],
+    shouldGzipBody: boolean,
+    customMappings?: CustomMapping[],
+    teamOverrides?: TeamOverrides,
+    requestOptions?: RequestOptions
+  ): Promise<EntitySyncProgress> {
+    const withCustomMappings: Entity[] = customMappings
+      ? entities.map(entity => applyCustomMappings(entity, customMappings))
+      : entities;
 
-        const post = async (path: string, body?: any) => {
-            return shouldGzipBody ? await this.postVoidWithGzipBody(path, body, requestOptions) : await this.postVoid(path, body, requestOptions)
-        }
-
-        await this.postVoid('/api/backstage/v2/entities/sync-init', requestOptions)
-
-        for (let customMappingsChunk of chunk(withCustomMappings, CHUNK_SIZE)) {
-            await post(`/api/backstage/v2/entities/sync-chunked`, {
-                entities: customMappingsChunk,
-            })
-        }
-
-        for (let teamOverridesTeamChunk of chunk(teamOverrides?.teams ?? [], CHUNK_SIZE)) {
-            await post(`/api/backstage/v2/entities/sync-chunked`, {
-                entities: [],
-                teamOverrides: {
-                    teams: teamOverridesTeamChunk,
-                    relationships: []
-                }
-            })
-        }
-
-        for (let teamOverridesRelationshipsChunk of chunk(teamOverrides?.relationships ?? [], CHUNK_SIZE)) {
-            await post(`/api/backstage/v2/entities/sync-chunked`, {
-                entities: [],
-                teamOverrides: {
-                    teams: teamOverridesRelationshipsChunk,
-                    relationships: []
-                }
-            })
-        }
-
-        return await this.post('/api/backstage/v2/entities/sync-submit', requestOptions)
+    const post = async (path: string, body?: any) => {
+      return shouldGzipBody ? await this.postVoidWithGzipBody(path, body, requestOptions) : await this.postVoid(path, body, requestOptions)
     }
+
+    await this.postVoid('/api/backstage/v2/entities/sync-init', requestOptions)
+
+    for (let customMappingsChunk of chunk(withCustomMappings, CHUNK_SIZE)) {
+      await post(`/api/backstage/v2/entities/sync-chunked`, {
+        entities: customMappingsChunk,
+      })
+    }
+
+    for (let teamOverridesTeamChunk of chunk(teamOverrides?.teams ?? [], CHUNK_SIZE)) {
+      await post(`/api/backstage/v2/entities/sync-chunked`, {
+        entities: [],
+        teamOverrides: {
+          teams: teamOverridesTeamChunk,
+          relationships: []
+        }
+      })
+    }
+
+    for (let teamOverridesRelationshipsChunk of chunk(teamOverrides?.relationships ?? [], CHUNK_SIZE)) {
+      await post(`/api/backstage/v2/entities/sync-chunked`, {
+        entities: [],
+        teamOverrides: {
+          teams: teamOverridesRelationshipsChunk,
+          relationships: []
+        }
+      })
+    }
+
+    return await this.post('/api/backstage/v2/entities/sync-submit', requestOptions)
+  }
 
   private async getBasePath(): Promise<string> {
     const proxyBasePath = await this.discoveryApi.getBaseUrl('proxy');
@@ -109,49 +109,48 @@ export class CortexClient implements CortexApi {
     return response.json();
   }
 
-    private async postVoid(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
-        const basePath = await this.getBasePath();
-        const url = `${basePath}${path}`;
+  private async postVoid(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
+    const basePath = await this.getBasePath();
+    const url = `${basePath}${path}`;
 
-        const response = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json' ,
-                ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
-            },
-        });
-
-        if (response.status !== 200) {
-            throw new Error(`Error communicating with Cortex`);
-        }
-
-        return;
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json' ,
+        ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
+      },
+    });
+    if (response.status !== 200) {
+      throw new Error(`Error communicating with Cortex`);
     }
 
-    private async postVoidWithGzipBody(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
-        const basePath = await this.getBasePath();
-        const url = `${basePath}${path}`;
+    return;
+  }
 
-        const input = Buffer.from(JSON.stringify(body), 'utf-8');
-        const compressed = gzipSync(input);
+  private async postVoidWithGzipBody(path: string, body?: any, requestOptions?: RequestOptions): Promise<void> {
+    const basePath = await this.getBasePath();
+    const url = `${basePath}${path}`;
 
-        const response = await fetch(url, {
-            method: 'POST',
-            body: compressed,
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Encoding': 'gzip',
-                ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
-            },
-        });
+    const input = Buffer.from(JSON.stringify(body), 'utf-8');
+    const compressed = gzipSync(input);
 
-        if (response.status !== 200) {
-            throw new Error(`Error communicating with Cortex`);
-        }
+    const response = await fetch(url, {
+      method: 'POST',
+      body: compressed,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Encoding': 'gzip',
+        ...(requestOptions?.token && { Authorization: `Bearer ${requestOptions.token}`})
+      },
+    });
 
-        return;
+    if (response.status !== 200) {
+      throw new Error(`Error communicating with Cortex`);
     }
+
+    return;
+  }
 }
 
 const CHUNK_SIZE = 1000;
