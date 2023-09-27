@@ -28,7 +28,7 @@
     "@backstage/config": "^1.0.7",
     "@backstage/config-loader": "^1.1.9",
     "@backstage/errors": "^1.1.5",
-    "@cortexapps/backstage-plugin-extensions": "0.0.12",
+    "@cortexapps/backstage-plugin-extensions": "0.0.19",
     "@types/express": "^4.17.6",
     "@types/node-cron": "^2.0.4",
     "cross-fetch": "^3.0.6",

@@ -39,21 +39,16 @@ export class CortexClient implements CortexApi {
   async submitEntitySync(
     entities: Entity[],
     shouldGzipBody: boolean,
-    customMappings?: CustomMapping[],
     teamOverrides?: TeamOverrides,
     requestOptions?: RequestOptions
   ): Promise<EntitySyncProgress> {
-    const withCustomMappings: Entity[] = customMappings
-      ? entities.map(entity => applyCustomMappings(entity, customMappings))
-      : entities;
-
     const post = async (path: string, body?: any) => {
       return shouldGzipBody ? await this.postVoidWithGzipBody(path, body, requestOptions) : await this.postVoid(path, body, requestOptions)
     }
 
     await this.postVoid('/api/backstage/v2/entities/sync-init', requestOptions)
 
-    for (let customMappingsChunk of chunk(withCustomMappings, CHUNK_SIZE)) {
+    for (let customMappingsChunk of chunk(entities, CHUNK_SIZE)) {
       await post(`/api/backstage/v2/entities/sync-chunked`, {
         entities: customMappingsChunk,
       })
