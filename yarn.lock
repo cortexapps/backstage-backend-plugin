@@ -2237,7 +2237,7 @@
     "@backstage/errors" "^1.1.5"
     cross-fetch "^3.1.5"
 
-"@backstage/catalog-model@^1.0.0", "@backstage/catalog-model@^1.2.1":
+"@backstage/catalog-model@^1.2.1":
   version "1.2.1"
   resolved "https://registry.npmjs.org/@backstage/catalog-model/-/catalog-model-1.2.1.tgz#ee3fa9ec404cef4a6b639160c7c016fbdd53229f"
   integrity sha512-pbH67Nov/bgJYIOl78ncjUfCPbjAI+VScfGRhGmcFubqK+w9pygy6Y/sYg10u5NFJxKCoSnbYZehO0451UbqhA==
@@ -2506,12 +2506,12 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@cortexapps/backstage-plugin-extensions@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.npmjs.org/@cortexapps/backstage-plugin-extensions/-/backstage-plugin-extensions-0.0.12.tgz#9317cf45ac41738524f6b2301b549f662d29f968"
-  integrity sha512-zdpEKgmDNKxTSquURFiBXmjloKNQ6uJIolqspuG6BH8KQaeeMQYdYusjYcZbjegn+ahygPKT11SFq8sXn7LUhA==
+"@cortexapps/backstage-plugin-extensions@0.0.19":
+  version "0.0.19"
+  resolved "https://registry.npmjs.org/@cortexapps/backstage-plugin-extensions/-/backstage-plugin-extensions-0.0.19.tgz#ef0f5a4e99fe12b3c432ecd1e0b1a2158947e113"
+  integrity sha512-lZfK94+UxfWzUwhgGlgWn9anjk2GNrYVvYrkih8Axr4n/AuaNYejgRsQqNpayOt+KBX08D1KEQvOsWIExjvL/g==
   dependencies:
-    "@backstage/catalog-model" "^1.0.0"
+    "@backstage/catalog-model" "^1.2.1"
 
 "@cortexapps/eslint-config-oss@^0.0.3":
   version "0.0.3"

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
+import { TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 import { EntitySyncProgress, RequestOptions } from "./types";
 
 export interface CortexApi {
   submitEntitySync(
     entities: Entity[],
     shouldGzipBody: boolean,
-    customMappings?: CustomMapping[],
     teamOverrides?: TeamOverrides,
     requestOptions?: RequestOptions,
   ): Promise<EntitySyncProgress>;

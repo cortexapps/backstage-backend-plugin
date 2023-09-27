@@ -20,10 +20,8 @@ import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 import { CatalogApi } from "@backstage/catalog-client";
 import { submitEntitySync } from "./task";
 import * as winston from "winston";
-import { captor } from "jest-mock-extended";
 
 describe('task', () => {
-
     const logger = winston.createLogger({
         transports: [
             new winston.transports.Console()
@@ -35,6 +33,12 @@ describe('task', () => {
         apiVersion: '1',
         kind: 'Component',
         metadata: { name: 'component', namespace: 'default' },
+    }
+
+    const component2: Entity = {
+        apiVersion: '1',
+        kind: 'Component',
+        metadata: { name: 'component2', namespace: 'default' },
     }
 
     const catalogApi: Partial<CatalogApi> = {
@@ -104,17 +108,12 @@ describe('task', () => {
             extensionApi
         });
 
-        const customMappingsCaptor = captor();
         expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
-            [component1],
+            [{ ...component1, spec: extension }],
             false,
-            customMappingsCaptor,
             { teams, relationships },
             { token: undefined }
         );
-
-        expect(customMappingsCaptor.value).toHaveLength(1);
-        expect(customMappingsCaptor.value[0]()).toBe(extension);
     })
 
     it('should sync entities with gzip override', async () => {
@@ -126,16 +125,82 @@ describe('task', () => {
             extensionApi
         });
 
-        const customMappingsCaptor = captor();
         expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
-          [component1],
+          [{ ...component1, spec: extension }],
           true,
-          customMappingsCaptor,
           { teams, relationships },
           { token: undefined }
         );
+    })
 
-        expect(customMappingsCaptor.value).toHaveLength(1);
-        expect(customMappingsCaptor.value[0]()).toBe(extension);
+    it('should support sync with kind filter extension', async () => {
+        const extensionApi: Partial<ExtensionApi> = {
+            async getSyncEntityFilter() {
+                return {
+                    kinds: [],
+                }
+            }
+        }
+
+        const catalogApi: Partial<CatalogApi> = {
+            async getEntities(request) {
+                let filter = request?.filter as Record<string, string[]> | undefined
+                let kindFilter: string[] | undefined = filter?.['kind']
+                if (kindFilter === undefined) {
+                    throw Error('Kind filter extension not in use')
+                }
+                return {
+                    items: [component1]
+                }
+            }
+        }
+
+        await submitEntitySync({
+            logger,
+            cortexApi,
+            syncWithGzip: true,
+            catalogApi: catalogApi as CatalogApi,
+            extensionApi
+        });
+
+        expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
+          [component1],
+          true,
+          undefined,
+          { token: undefined }
+        );
+    })
+
+    it('should support sync with individual entity filter extension', async () => {
+        const extensionApi: Partial<ExtensionApi> = {
+            async getSyncEntityFilter() {
+                return {
+                    entityFilter: (entity) => entity.metadata.name === component1.metadata.name
+                }
+            }
+        }
+
+        const catalogApi: Partial<CatalogApi> = {
+            async getEntities(_) {
+                return Promise.resolve({
+                    items: [component1, component2]
+                })
+            }
+        }
+
+        await submitEntitySync({
+            logger,
+            cortexApi,
+            syncWithGzip: true,
+            catalogApi: catalogApi as CatalogApi,
+            extensionApi
+        });
+
+        expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
+          [component1],
+          true,
+          undefined,
+          { token: undefined }
+        );
     })
 });
