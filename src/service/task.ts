@@ -30,7 +30,7 @@ interface SyncEntitiesOptions {
   tokenManager?: TokenManager;
 }
 
-const getBackstageEntities: (options: { catalogApi: CatalogApi, extensionApi: ExtensionApi }) => Promise<Entity[]> = async ({
+const getBackstageEntities: (options: { catalogApi: CatalogApi, extensionApi?: ExtensionApi }) => Promise<Entity[]> = async ({
   catalogApi,
   extensionApi,
 }) => {

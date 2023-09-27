@@ -143,9 +143,10 @@ describe('task', () => {
         }
 
         const catalogApi: Partial<CatalogApi> = {
-            async getEntities({ filter }) {
-                console.log(filter);
-                if (filter['kind'] === undefined) {
+            async getEntities(request) {
+                let filter = request?.filter as Record<string, string[]> | undefined
+                let kindFilter: string[] | undefined = filter?.['kind']
+                if (kindFilter === undefined) {
                     throw Error('Kind filter extension not in use')
                 }
                 return {
