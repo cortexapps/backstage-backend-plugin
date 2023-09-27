@@ -20,7 +20,6 @@ import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
 import { CatalogApi } from "@backstage/catalog-client";
 import { submitEntitySync } from "./task";
 import * as winston from "winston";
-import { captor } from "jest-mock-extended";
 
 describe('task', () => {
     const logger = winston.createLogger({

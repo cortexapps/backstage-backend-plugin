@@ -16,8 +16,7 @@
 import { CortexApi } from "./CortexApi";
 import { Entity } from '@backstage/catalog-model';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
-import { CustomMapping, TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
-import { applyCustomMappings } from "../utils/componentUtils";
+import { TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
 import { EntitySyncProgress, RequestOptions } from "./types";
 import { Buffer } from "buffer";
 import { gzipSync } from "zlib";
