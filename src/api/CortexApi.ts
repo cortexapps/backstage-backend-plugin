@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import { TeamOverrides } from "@cortexapps/backstage-plugin-extensions";
-import { EntitySyncProgress, RequestOptions } from "./types";
+import { TeamOverrides } from '@cortexapps/backstage-plugin-extensions';
+import { EntitySyncProgress, RequestOptions } from './types';
 
 export interface CortexApi {
   submitEntitySync(

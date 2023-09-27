@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginEndpointDiscovery, TokenManager } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  TokenManager,
+} from '@backstage/backend-common';
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
-import * as cron from "node-cron";
-import { CortexClient } from "../api/CortexClient";
-import { submitEntitySync } from "./task";
-import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
-import { CatalogClient } from "@backstage/catalog-client";
+import * as cron from 'node-cron';
+import { CortexClient } from '../api/CortexClient';
+import { submitEntitySync } from './task';
+import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
+import { CatalogClient } from '@backstage/catalog-client';
 
 export interface RouterOptions {
   logger: Logger;
@@ -35,7 +38,6 @@ export interface RouterOptions {
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-
   const router = Router();
   router.use(express.json());
 
@@ -43,19 +45,32 @@ export async function createRouter(
     response.send({ status: 'ok' });
   });
 
-  await initCron(options)
+  await initCron(options);
 
   return router;
 }
 
 async function initCron(options: RouterOptions) {
+  const {
+    logger,
+    discoveryApi,
+    syncWithGzip,
+    cronSchedule,
+    extensionApi,
+    tokenManager,
+  } = options;
 
-  const { logger, discoveryApi, syncWithGzip, cronSchedule, extensionApi, tokenManager } = options
-
-  const catalogApi = new CatalogClient({ discoveryApi })
-  const cortexApi = new CortexClient({ discoveryApi })
+  const catalogApi = new CatalogClient({ discoveryApi });
+  const cortexApi = new CortexClient({ discoveryApi });
 
   cron.schedule(cronSchedule, () => {
-    submitEntitySync({ logger, catalogApi, cortexApi, syncWithGzip: syncWithGzip ?? false, extensionApi, tokenManager })
-  })
+    submitEntitySync({
+      logger,
+      catalogApi,
+      cortexApi,
+      syncWithGzip: syncWithGzip ?? false,
+      extensionApi,
+      tokenManager,
+    });
+  });
 }

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Entity } from "@backstage/catalog-model";
+import { Entity } from '@backstage/catalog-model';
 
 export const ENTITY_DEFAULT_NAMESPACE = 'default';
-export const LOCATION_ANNOTATION = "backstage.io/managed-by-location";
-export const ORIGIN_LOCATION_ANNOTATION = "backstage.io/managed-by-origin-location";
+export const LOCATION_ANNOTATION = 'backstage.io/managed-by-location';
+export const ORIGIN_LOCATION_ANNOTATION =
+  'backstage.io/managed-by-origin-location';
 export const CATALOG_FILTER_EXISTS = Symbol('CATALOG_FILTER_EXISTS');
 
 export function stringifyEntityRef(
