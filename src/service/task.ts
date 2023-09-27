@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CortexApi } from "../api/CortexApi";
+import { CortexApi } from '../api/CortexApi';
 import { Logger } from 'winston';
-import { CatalogApi } from "@backstage/catalog-client";
-import { ExtensionApi } from "@cortexapps/backstage-plugin-extensions";
-import { TokenManager } from "@backstage/backend-common";
-import { Entity } from "@backstage/catalog-model";
-import { applyCustomMappings } from "../utils/componentUtils";
+import { CatalogApi } from '@backstage/catalog-client';
+import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
+import { TokenManager } from '@backstage/backend-common';
+import { Entity } from '@backstage/catalog-model';
+import { applyCustomMappings } from '../utils/componentUtils';
 
 interface SyncEntitiesOptions {
   logger: Logger;
@@ -30,10 +30,10 @@ interface SyncEntitiesOptions {
   tokenManager?: TokenManager;
 }
 
-const getBackstageEntities: (options: { catalogApi: CatalogApi, extensionApi?: ExtensionApi }) => Promise<Entity[]> = async ({
-  catalogApi,
-  extensionApi,
-}) => {
+const getBackstageEntities: (options: {
+  catalogApi: CatalogApi;
+  extensionApi?: ExtensionApi;
+}) => Promise<Entity[]> = async ({ catalogApi, extensionApi }) => {
   const syncEntityFilter = await extensionApi?.getSyncEntityFilter?.();
   const { items: entities } = await catalogApi.getEntities(
     syncEntityFilter?.kinds
@@ -47,31 +47,43 @@ const getBackstageEntities: (options: { catalogApi: CatalogApi, extensionApi?: E
   const customMappings = await extensionApi?.getCustomMappings?.();
   const withCustomMappings: Entity[] = customMappings
     ? filteredEntities.map(entity =>
-      applyCustomMappings(entity, customMappings),
-    )
+        applyCustomMappings(entity, customMappings),
+      )
     : filteredEntities;
 
   return withCustomMappings;
-}
-export const submitEntitySync: (options: SyncEntitiesOptions) => Promise<void> = async ({ logger, cortexApi, syncWithGzip, catalogApi, extensionApi, tokenManager }) => {
-  let token: string | undefined = undefined;
-  if (tokenManager !== undefined) {
-    logger.info("Using TokenManager for catalog request");
-    ({ token } = await tokenManager.getToken());
-  }
+};
+export const submitEntitySync: (options: SyncEntitiesOptions) => Promise<void> =
+  async ({
+    logger,
+    cortexApi,
+    syncWithGzip,
+    catalogApi,
+    extensionApi,
+    tokenManager,
+  }) => {
+    let token: string | undefined = undefined;
+    if (tokenManager !== undefined) {
+      logger.info('Using TokenManager for catalog request');
+      ({ token } = await tokenManager.getToken());
+    }
 
-  logger.info("Fetching all Backstage entities...")
-  const entities = await getBackstageEntities({ catalogApi, extensionApi })
+    logger.info('Fetching all Backstage entities...');
+    const entities = await getBackstageEntities({ catalogApi, extensionApi });
 
-  logger.info("Fetching Cortex extensions...")
-  const groupOverrides = await extensionApi?.getTeamOverrides?.(entities);
+    logger.info('Fetching Cortex extensions...');
+    const groupOverrides = await extensionApi?.getTeamOverrides?.(entities);
 
-  logger.info("Submitting entity sync task to Cortex...")
-  try {
-    await cortexApi.submitEntitySync(entities, syncWithGzip, groupOverrides, { token })
-  } catch (err: any) {
-    logger.error(`Error while submitting entity sync task to Cortex: ${err.message}`)
-  }
-  
-  logger.info("Submitted entity sync task to Cortex")
-}
+    logger.info('Submitting entity sync task to Cortex...');
+    try {
+      await cortexApi.submitEntitySync(entities, syncWithGzip, groupOverrides, {
+        token,
+      });
+    } catch (err: any) {
+      logger.error(
+        `Error while submitting entity sync task to Cortex: ${err.message}`,
+      );
+    }
+
+    logger.info('Submitted entity sync task to Cortex');
+  };

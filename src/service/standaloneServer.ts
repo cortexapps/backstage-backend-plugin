@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createServiceBuilder, loadBackendConfig, SingleHostDiscovery } from '@backstage/backend-common';
+import {
+  createServiceBuilder,
+  loadBackendConfig,
+  SingleHostDiscovery,
+} from '@backstage/backend-common';
 import { Server } from 'http';
 import { Logger } from 'winston';
 import { createRouter } from './router';
@@ -30,16 +34,19 @@ export async function startStandaloneServer(
   const logger = options.logger.child({ service: 'cortex-backend' });
 
   const config = await loadBackendConfig({ logger, argv: process.argv });
-  const discoveryApi = SingleHostDiscovery.fromConfig(config)
-  const cronSchedule = config.getOptionalString('cortex.backend.cron') ?? '0 3,7,11,15,19,23 * * *'
-  const syncWithGzip = config.getOptionalBoolean('cortex.syncWithGzip') ?? false
+  const discoveryApi = SingleHostDiscovery.fromConfig(config);
+  const cronSchedule =
+    config.getOptionalString('cortex.backend.cron') ??
+    '0 3,7,11,15,19,23 * * *';
+  const syncWithGzip =
+    config.getOptionalBoolean('cortex.syncWithGzip') ?? false;
 
   logger.debug('Starting application server...');
   const router = await createRouter({
     logger,
     discoveryApi,
     cronSchedule,
-    syncWithGzip
+    syncWithGzip,
   });
 
   let service = createServiceBuilder(module)
