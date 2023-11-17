@@ -33,12 +33,14 @@ interface SyncEntitiesOptions {
 const getBackstageEntities: (options: {
   catalogApi: CatalogApi;
   extensionApi?: ExtensionApi;
-}) => Promise<Entity[]> = async ({ catalogApi, extensionApi }) => {
+  token?: string;
+}) => Promise<Entity[]> = async ({ catalogApi, extensionApi, token }) => {
   const syncEntityFilter = await extensionApi?.getSyncEntityFilter?.();
   const { items: entities } = await catalogApi.getEntities(
     syncEntityFilter?.kinds
       ? { filter: { kind: syncEntityFilter?.kinds } }
       : undefined,
+    { token }
   );
   const filteredEntities = syncEntityFilter?.entityFilter
     ? entities.filter(syncEntityFilter?.entityFilter)
@@ -69,7 +71,7 @@ export const submitEntitySync: (options: SyncEntitiesOptions) => Promise<void> =
     }
 
     logger.info('Fetching all Backstage entities...');
-    const entities = await getBackstageEntities({ catalogApi, extensionApi });
+    const entities = await getBackstageEntities({ catalogApi, extensionApi, token });
 
     logger.info('Fetching Cortex extensions...');
     const groupOverrides = await extensionApi?.getTeamOverrides?.(entities);
