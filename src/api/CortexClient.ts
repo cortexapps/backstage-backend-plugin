@@ -47,7 +47,7 @@ export class CortexClient implements CortexApi {
         : await this.postVoid(path, body, requestOptions);
     };
 
-    await this.postVoid('/api/backstage/v2/entities/sync-init', requestOptions);
+    await this.postVoid('/api/backstage/v2/entities/sync-init', undefined, requestOptions);
 
     for (let customMappingsChunk of chunk(entities, CHUNK_SIZE)) {
       await post(`/api/backstage/v2/entities/sync-chunked`, {
@@ -83,6 +83,7 @@ export class CortexClient implements CortexApi {
 
     return await this.post(
       '/api/backstage/v2/entities/sync-submit',
+      undefined,
       requestOptions,
     );
   }
