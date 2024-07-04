@@ -10,6 +10,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
+    "pluginId": "@cortexapps/backstage-backend-plugin",
     "role": "backend-plugin"
   },
   "scripts": {
