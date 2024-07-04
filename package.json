@@ -11,6 +11,9 @@
   },
   "backstage": {
     "pluginId": "@cortexapps/backstage-backend-plugin",
+    "pluginPackages": [
+      "@cortexapps/backstage-backend-plugin"
+    ],
     "role": "backend-plugin"
   },
   "scripts": {
