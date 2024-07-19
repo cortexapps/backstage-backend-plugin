@@ -15,6 +15,7 @@
  */
 import { CortexApi } from '../api/CortexApi';
 import mock from 'jest-mock-extended/lib/Mock';
+import { AuthService } from '@backstage/backend-plugin-api'
 import { Entity } from '@backstage/catalog-model';
 import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
 import { CatalogApi } from '@backstage/catalog-client';
@@ -26,6 +27,8 @@ describe('task', () => {
     transports: [new winston.transports.Console()],
   });
   const cortexApi = mock<CortexApi>();
+  const auth = mock<AuthService>();
+  auth.getPluginRequestToken.mockResolvedValue({ token: "token" })
 
   const component1: Entity = {
     apiVersion: '1',
@@ -105,13 +108,14 @@ describe('task', () => {
       syncWithGzip: false,
       catalogApi: catalogApi as CatalogApi,
       extensionApi,
+      auth,
     });
 
     expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
       [{ ...component1, spec: extension }],
       false,
       { teams, relationships },
-      { token: undefined },
+      { token: "token" },
     );
   });
 
@@ -122,13 +126,14 @@ describe('task', () => {
       syncWithGzip: true,
       catalogApi: catalogApi as CatalogApi,
       extensionApi,
+      auth,
     });
 
     expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
       [{ ...component1, spec: extension }],
       true,
       { teams, relationships },
-      { token: undefined },
+      { token: "token" },
     );
   });
 
@@ -160,13 +165,14 @@ describe('task', () => {
       syncWithGzip: true,
       catalogApi: catalogApi as CatalogApi,
       extensionApi,
+      auth,
     });
 
     expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
       [component1],
       true,
       undefined,
-      { token: undefined },
+      { token: "token" },
     );
   });
 
@@ -194,13 +200,14 @@ describe('task', () => {
       syncWithGzip: true,
       catalogApi: catalogApi as CatalogApi,
       extensionApi,
+      auth,
     });
 
     expect(cortexApi.submitEntitySync).toHaveBeenLastCalledWith(
       [component1],
       true,
       undefined,
-      { token: undefined },
+      { token: "token" },
     );
   });
 });

@@ -16,7 +16,7 @@
 import {
   createServiceBuilder,
   loadBackendConfig,
-  SingleHostDiscovery,
+  HostDiscovery,
 } from '@backstage/backend-common';
 import { Server } from 'http';
 import { Logger } from 'winston';
@@ -34,7 +34,7 @@ export async function startStandaloneServer(
   const logger = options.logger.child({ service: 'cortex-backend' });
 
   const config = await loadBackendConfig({ logger, argv: process.argv });
-  const discoveryApi = SingleHostDiscovery.fromConfig(config);
+  const discovery = HostDiscovery.fromConfig(config);
   const cronSchedule =
     config.getOptionalString('cortex.backend.cron') ??
     '0 3,7,11,15,19,23 * * *';
@@ -44,7 +44,7 @@ export async function startStandaloneServer(
   logger.debug('Starting application server...');
   const router = await createRouter({
     logger,
-    discoveryApi,
+    discovery,
     cronSchedule,
     syncWithGzip,
   });

@@ -17,7 +17,7 @@ import { CortexApi } from '../api/CortexApi';
 import { Logger } from 'winston';
 import { CatalogApi } from '@backstage/catalog-client';
 import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
-import { TokenManager } from '@backstage/backend-common';
+import { AuthService } from '@backstage/backend-plugin-api'
 import { Entity } from '@backstage/catalog-model';
 import { applyCustomMappings } from '../utils/componentUtils';
 
@@ -27,7 +27,7 @@ interface SyncEntitiesOptions {
   syncWithGzip: boolean;
   catalogApi: CatalogApi;
   extensionApi?: ExtensionApi;
-  tokenManager?: TokenManager;
+  auth: AuthService;
 }
 
 const getBackstageEntities: (options: {
@@ -62,13 +62,12 @@ export const submitEntitySync: (options: SyncEntitiesOptions) => Promise<void> =
     syncWithGzip,
     catalogApi,
     extensionApi,
-    tokenManager,
+    auth,
   }) => {
-    let token: string | undefined = undefined;
-    if (tokenManager !== undefined) {
-      logger.info('Using TokenManager for catalog request');
-      ({ token } = await tokenManager.getToken());
-    }
+    const { token } = await auth.getPluginRequestToken({
+      onBehalfOf: await auth.getOwnServiceCredentials(),
+      targetPluginId: 'catalog',
+    })
 
     logger.info('Fetching all Backstage entities...');
     const entities = await getBackstageEntities({ catalogApi, extensionApi, token });
