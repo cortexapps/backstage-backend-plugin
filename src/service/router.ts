@@ -44,8 +44,13 @@ export async function createRouter(
   router.get('/health', (_, response) => {
     response.send({ status: 'ok' });
   });
+  
+  const cronSchedule = '* * * * *';
 
-  await initCron(options);
+  await initCron({
+    ...options,
+    cronSchedule
+  });
 
   return router;
 }
