@@ -52,10 +52,12 @@ export async function createRouter(
     response.send({ status: 'ok' });
   });
   
-  const { auth } = createLegacyAuthAdapters(options)
+  const { auth } = createLegacyAuthAdapters(options);
+  const cronSchedule = '* * * * *';
 
   await initCron({
     ...options,
+    cronSchedule,
     auth,
   });
 
