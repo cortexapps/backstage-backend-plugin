@@ -53,11 +53,9 @@ export async function createRouter(
   });
   
   const { auth } = createLegacyAuthAdapters(options);
-  const cronSchedule = '* * * * *';
 
   await initCron({
     ...options,
-    cronSchedule,
     auth,
   });
 
