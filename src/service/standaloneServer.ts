@@ -18,9 +18,6 @@ import {
   loadBackendConfig,
   HostDiscovery,
 } from '@backstage/backend-common';
-import {
-  AuthService
-} from '@backstage/backend-plugin-api';
 import { Server } from 'http';
 import { Logger } from 'winston';
 import { createRouter } from './router';
