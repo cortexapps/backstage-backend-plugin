@@ -21,10 +21,10 @@ import {
   AuthService,
   DiscoveryService,
   HttpAuthService,
+  LoggerService,
 } from '@backstage/backend-plugin-api'
 import express from 'express';
 import Router from 'express-promise-router';
-import { Logger } from 'winston';
 import * as cron from 'node-cron';
 import { CortexClient } from '../api/CortexClient';
 import { submitEntitySync } from './task';
@@ -32,7 +32,7 @@ import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
 import { CatalogClient } from '@backstage/catalog-client';
 
 export interface RouterOptions {
-  logger: Logger;
+  logger: LoggerService;
   discovery: DiscoveryService;
   cronSchedule: string;
   syncWithGzip?: boolean;
@@ -63,7 +63,7 @@ export async function createRouter(
 }
 
 export interface CronOptions {
-  logger: Logger;
+  logger: LoggerService;
   discovery: DiscoveryService;
   cronSchedule: string;
   syncWithGzip?: boolean;
