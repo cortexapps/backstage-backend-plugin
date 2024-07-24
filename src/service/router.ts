@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 import {
-  PluginEndpointDiscovery,
   TokenManager,
+  createLegacyAuthAdapters,
 } from '@backstage/backend-common';
+import {
+  AuthService,
+  DiscoveryService,
+  HttpAuthService,
+} from '@backstage/backend-plugin-api'
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
@@ -28,11 +33,13 @@ import { CatalogClient } from '@backstage/catalog-client';
 
 export interface RouterOptions {
   logger: Logger;
-  discoveryApi: PluginEndpointDiscovery;
+  discovery: DiscoveryService;
   cronSchedule: string;
   syncWithGzip?: boolean;
   extensionApi?: ExtensionApi;
   tokenManager?: TokenManager;
+  auth?: AuthService;
+  httpAuth?: HttpAuthService;
 }
 
 export async function createRouter(
@@ -44,24 +51,38 @@ export async function createRouter(
   router.get('/health', (_, response) => {
     response.send({ status: 'ok' });
   });
+  
+  const { auth } = createLegacyAuthAdapters(options);
 
-  await initCron(options);
+  await initCron({
+    ...options,
+    auth,
+  });
 
   return router;
 }
 
-async function initCron(options: RouterOptions) {
+export interface CronOptions {
+  logger: Logger;
+  discovery: DiscoveryService;
+  cronSchedule: string;
+  syncWithGzip?: boolean;
+  extensionApi?: ExtensionApi;
+  auth: AuthService;
+}
+
+async function initCron(options: CronOptions) {
   const {
     logger,
-    discoveryApi,
+    discovery,
     syncWithGzip,
     cronSchedule,
     extensionApi,
-    tokenManager,
+    auth,
   } = options;
 
-  const catalogApi = new CatalogClient({ discoveryApi });
-  const cortexApi = new CortexClient({ discoveryApi });
+  const catalogApi = new CatalogClient({ discoveryApi: discovery });
+  const cortexApi = new CortexClient({ discoveryApi: discovery });
 
   cron.schedule(cronSchedule, () => {
     submitEntitySync({
@@ -70,7 +91,7 @@ async function initCron(options: RouterOptions) {
       cortexApi,
       syncWithGzip: syncWithGzip ?? false,
       extensionApi,
-      tokenManager,
+      auth,
     });
   });
 }
