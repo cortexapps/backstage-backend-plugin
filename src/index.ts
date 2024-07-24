@@ -18,7 +18,6 @@ import {
     coreServices,
     createBackendPlugin,
 } from '@backstage/backend-plugin-api';
-import {  } from '@cortexapps/backstage-plugin-extensions';
 import { createRouter } from './service/router';
 
 export const cortexPlugin = createBackendPlugin({
