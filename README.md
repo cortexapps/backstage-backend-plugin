@@ -6,7 +6,7 @@ to any cron schedule of your choosing.
 
 To start using the Backstage plugin and see a demo, please [book a demo](https://www.cortex.io/demo)!
 
-## Setup and Integration (old backend model)
+## Setup and Integration ([old backend model](https://backstage.io/docs/backend-system/building-backends/migrating))
 
 1. In the [packages/backend](https://github.com/backstage/backstage/blob/master/packages/backend/) directory of your Backstage
    instance, add the plugin as a package.json dependency:
@@ -80,7 +80,7 @@ proxy:
       - Content-Encoding
 ```
 
-## Setup and Integration (new backend model)
+## Setup and Integration ([new backend model](https://backstage.io/docs/backend-system/building-backends/migrating))
 
 1. In the [packages/backend](https://github.com/backstage/backstage/blob/master/packages/backend/) directory of your Backstage
    instance, add the plugin as a package.json dependency:
