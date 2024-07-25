@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 import { CortexApi } from '../api/CortexApi';
-import { Logger } from 'winston';
 import { CatalogApi } from '@backstage/catalog-client';
 import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
-import { AuthService } from '@backstage/backend-plugin-api'
+import { AuthService, LoggerService } from '@backstage/backend-plugin-api'
 import { Entity } from '@backstage/catalog-model';
 import { applyCustomMappings } from '../utils/componentUtils';
 
 interface SyncEntitiesOptions {
-  logger: Logger;
+  logger: LoggerService;
   cortexApi: CortexApi;
   syncWithGzip: boolean;
   catalogApi: CatalogApi;
