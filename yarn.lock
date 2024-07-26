@@ -2777,10 +2777,10 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@cortexapps/backstage-plugin-extensions@0.0.24":
-  version "0.0.24"
-  resolved "https://registry.npmjs.org/@cortexapps/backstage-plugin-extensions/-/backstage-plugin-extensions-0.0.24.tgz#120a15e68075d24e85d816a170c70de268cd2cc3"
-  integrity sha512-FAym5/ObAPqBeqeaP1HcTgxUgMBxuWoWxRMEm7pWlCgMF6e6NwhNQ6UYqEwuffEykxipm33DhgQtL0qGgr7fgg==
+"@cortexapps/backstage-plugin-extensions@0.0.25":
+  version "0.0.25"
+  resolved "https://registry.npmjs.org/@cortexapps/backstage-plugin-extensions/-/backstage-plugin-extensions-0.0.25.tgz#5b34dab1753dec9bc5584686d2d3acb721a72269"
+  integrity sha512-m9aqs63c5EVrtusKzx6TiuIpitf8aXF6HCibyYw1jewkKIDwNmsCqKl1js8JXD7lxBfRYoqS22fuF2LuaYs4GQ==
   dependencies:
     "@backstage/backend-plugin-api" "^0.7.0"
     "@backstage/catalog-model" "^1.5.0"
