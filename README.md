@@ -51,6 +51,8 @@ apiRouter.use('/cortex', await cortex(cortexEnv));
   headers:
     Authorization: Bearer ${CORTEX_TOKEN}
 ```
+> ℹ️ 
+> The ${CORTEX_BACKEND_HOST_URL} value should point to the Cortex API. If syncing to Cortex cloud this would be `https://api.getcortexapp.com`. If running Cortex self-managed, please update accordingly.
 
 5. (Optional) You can choose to have the entity sync cron job use gzip to compress the entities by updating `cortex.ts` from step 2. You must also update the Backstage HTTP proxy to allow the `Content-Encoding` header.
 
