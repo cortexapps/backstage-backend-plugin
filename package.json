@@ -1,8 +1,9 @@
 {
   "name": "@cortexapps/backstage-backend-plugin",
-  "version": "1.6.5-a",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "version": "1.6.5",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.ems.js",
+  "types": "dist/index.d.ts",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public",
@@ -10,7 +11,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "pluginId": "@cortexapps/backstage-backend-plugin",
+    "pluginId": "cortex-backend",
     "pluginPackages": [
       "@cortexapps/backstage-backend-plugin"
     ],
@@ -32,7 +33,7 @@
     "@backstage/config": "^1.2.0",
     "@backstage/config-loader": "^1.8.0",
     "@backstage/errors": "^1.2.4",
-    "@cortexapps/backstage-plugin-extensions": "0.0.25",
+    "@cortexapps/backstage-plugin-extensions": "^0.0.27",
     "@types/express": "^4.17.6",
     "@types/node-cron": "^2.0.4",
     "cross-fetch": "^3.0.6",

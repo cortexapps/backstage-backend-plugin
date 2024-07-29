@@ -102,13 +102,15 @@ backend.start()
 ```
 
 3. Update [app-config.yaml](https://github.com/backstage/backstage/blob/master/app-config.yaml#L54) to add a new config under
-   the `proxy` section:
+   the `proxy.endpoints` section:
 
 ```yaml
-'/cortex':
-  target: ${CORTEX_BACKEND_HOST_URL}
-  headers:
-    Authorization: Bearer ${CORTEX_TOKEN}
+proxy:
+  endpoints:
+    '/cortex':
+      target: ${CORTEX_BACKEND_HOST_URL}
+      headers:
+        Authorization: Bearer ${CORTEX_TOKEN}
 ```
 
 4. (Optional) You may further configure entity sync cron job to set a custom schedule or use gzip to compress the entities by adding appropriate configuration properties. If enabling gzip, you must also update the Backstage HTTP proxy to allow the `Content-Encoding` header.
@@ -120,12 +122,13 @@ cortex:
     cron: 0 * * * * # every hour
 ---
 proxy:
-  '/cortex':
-    target: ${CORTEX_BACKEND_HOST_URL}
-    headers:
-      Authorization: ${CORTEX_TOKEN}
-    allowedHeaders:
-      - Content-Encoding
+  endpoints:
+    '/cortex':
+      target: ${CORTEX_BACKEND_HOST_URL}
+      headers:
+        Authorization: ${CORTEX_TOKEN}
+      allowedHeaders:
+        - Content-Encoding
 ```
 
 5. (Optional) If you wish to make use of custom mappings via the `ExtensionsApi` in `@cortexapps/backstage-plugin-extensions`, you must configure a module to supply an implementation of this API to the Cortex plugin.
@@ -140,7 +143,7 @@ import { cortexExtensionApiExtensionPoint } from '@cortexapps/backstage-plugin-e
 import { MyExtensionApiImpl } from `./MyExtensionApiImpl`;
 
 export const cortexModuleExtensionApiProvider = createBackendModule({
-  pluginId: 'cortex',
+  pluginId: 'cortex-backend',
   moduleId: 'extension-api',
   register(env) {
     env.registerInit({
@@ -167,4 +170,12 @@ And finally add the extension to the backend in `packages/backend/src/index.ts` 
 ```ts
 backend.add(cortexPlugin); // should already be present from step 2
 backend.add(import('<your-module-package>'));
+```
+
+Alternatively, if you do not wish to separate the module into its own package, you can instantiate `cortexModuleExtensionApiProvider` as shown above and add it to the backend directly:
+
+```ts
+const cortexModuleExtensionApiProvider = createBackendModule({...})
+...
+backend.add(cortexModuleExtensionApiProvider);
 ```
