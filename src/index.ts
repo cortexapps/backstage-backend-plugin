@@ -19,16 +19,17 @@ import {
     createBackendPlugin,
 } from '@backstage/backend-plugin-api';
 import { createRouter } from './service/router';
-import { cortexExtensionApiExtensionPoint, ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
+import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
+import { cortexExtensionApiExtensionPoint } from '@cortexapps/backstage-plugin-extensions';
 
 export const cortexPlugin = createBackendPlugin({
-    pluginId: 'cortex',
+    pluginId: 'cortex-backend',
     
     register(env) {
         let cortexExtensionApi: ExtensionApi | undefined = undefined;
         env.registerExtensionPoint(cortexExtensionApiExtensionPoint, {
             setExtensionApi(extensionApi) {
-                if (extensionApi) {
+                if (cortexExtensionApi) {
                     throw new Error('ExtensionApi may only be set once')
                 }
                 cortexExtensionApi = extensionApi
