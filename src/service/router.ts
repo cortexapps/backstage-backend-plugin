@@ -52,7 +52,11 @@ export async function createRouter(
     response.send({ status: 'ok' });
   });
   
+  options.logger.info(`${options.auth}`);
+  Object.keys(options.auth).forEach(key => options.logger.info(`${key}: ${options.auth[key]}`))
+  
   const { auth } = createLegacyAuthAdapters(options);
+  Object.keys(auth).forEach(key => options.logger.info(`${key}: ${auth[key]}`))
 
   await initCron({
     ...options,

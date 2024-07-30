@@ -63,13 +63,19 @@ export const submitEntitySync: (options: SyncEntitiesOptions) => Promise<void> =
     extensionApi,
     auth,
   }) => {
-    const { token } = await auth.getPluginRequestToken({
+    const catalogToken = (await auth.getPluginRequestToken({
       onBehalfOf: await auth.getOwnServiceCredentials(),
       targetPluginId: 'catalog',
-    })
+    })).token;
+    logger.info(`Catalog Token: ${catalogToken}`);
+    const proxyToken = (await auth.getPluginRequestToken({
+      onBehalfOf: await auth.getOwnServiceCredentials(),
+      targetPluginId: 'proxy',
+    })).token;
+    logger.info(`Proxy token: ${proxyToken}`);
 
     logger.info('Fetching all Backstage entities...');
-    const entities = await getBackstageEntities({ catalogApi, extensionApi, token });
+    const entities = await getBackstageEntities({ catalogApi, extensionApi, token: catalogToken });
 
     logger.info('Fetching Cortex extensions...');
     const groupOverrides = await extensionApi?.getTeamOverrides?.(entities);
@@ -77,7 +83,7 @@ export const submitEntitySync: (options: SyncEntitiesOptions) => Promise<void> =
     logger.info('Submitting entity sync task to Cortex...');
     try {
       await cortexApi.submitEntitySync(entities, syncWithGzip, groupOverrides, {
-        token,
+        token: proxyToken,
       });
     } catch (err: any) {
       logger.error(
