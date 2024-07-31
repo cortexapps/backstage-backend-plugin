@@ -75,7 +75,7 @@ proxy:
   '/cortex':
     target: ${CORTEX_BACKEND_HOST_URL}
     headers:
-      Authorization: ${CORTEX_TOKEN}
+      Authorization: Bearer ${CORTEX_TOKEN}
     allowedHeaders:
       - Content-Encoding
 ```
@@ -126,7 +126,7 @@ proxy:
     '/cortex':
       target: ${CORTEX_BACKEND_HOST_URL}
       headers:
-        Authorization: ${CORTEX_TOKEN}
+        Authorization: Bearer ${CORTEX_TOKEN}
       allowedHeaders:
         - Content-Encoding
 ```
