@@ -144,7 +144,7 @@ import { MyExtensionApiImpl } from `./MyExtensionApiImpl`;
 
 export const cortexModuleExtensionApiProvider = createBackendModule({
   pluginId: 'cortex-backend',
-  moduleId: 'extension-api',
+  moduleId: 'my-extension-api',
   register(env) {
     env.registerInit({
       deps: {
