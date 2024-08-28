@@ -92,7 +92,7 @@ $ yarn add @cortexapps/backstage-backend-plugin
 2. Update `packages/backend/src/index.ts`:
 
 ```tsx
-import cortexPlugin from '@cortexapps/backstage-backend-plugin';
+import { cortexPlugin } from '@cortexapps/backstage-backend-plugin';
 ...
 const backend = createBackend();
 ...
