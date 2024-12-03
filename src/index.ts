@@ -22,7 +22,7 @@ import { createRouter } from './service/router';
 import { ExtensionApi } from '@cortexapps/backstage-plugin-extensions';
 import { cortexExtensionApiExtensionPoint } from '@cortexapps/backstage-plugin-extensions';
 
-export const cortexPlugin = createBackendPlugin({
+const cortexPlugin = createBackendPlugin({
     pluginId: 'cortex-backend',
     
     register(env) {
@@ -69,3 +69,5 @@ export const cortexPlugin = createBackendPlugin({
 });
 
 export * from './service/router';
+
+export default cortexPlugin;
